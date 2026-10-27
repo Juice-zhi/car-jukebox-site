@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>车载点歌台 · 隐私政策</title>
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header class="hero">
+    <img src="icon.png" alt="">
+    <div>
+      <h1>隐私政策</h1>
+      <p>车载点歌台 · 更新于 2026 年 10 月</p>
+    </div>
+  </header>
+  <nav class="top"><a href="./">帮助</a><a href="#en">English</a></nav>
+
+  <p>车载点歌台（下称「本 App」）是一个车上的点歌工具：司机的 iPhone 播放，朋友扫码在网页上点歌。本 App 由个人开发者开发，<strong>没有广告，不做追踪，不用任何统计或分析工具</strong>。</p>
+
+  <h2>保存在你手机上的</h2>
+  <ul>
+    <li>播放器链接（连接点歌台服务器用的网址和密钥），保存在 iOS 钥匙串里。</li>
+    <li>播放偏好：音质、是否在后台保持在线等。</li>
+    <li>把 QQ 音乐登录二维码存到相册时，会请求「仅添加照片」权限；本 App 不读取你的相册。</li>
+  </ul>
+  <p>这些数据只在你的手机上，开发者看不到。</p>
+
+  <h2>保存在点歌台服务器上的</h2>
+  <p>本 App 只和你设置的点歌台服务器通信。服务器有两种：</p>
+  <ol>
+    <li><strong>你自己搭的服务器</strong>：数据都在你自己的服务器上，开发者接触不到。</li>
+    <li><strong>用邀请码在朋友（车主）的服务器上开的车</strong>：数据存在这位车主的服务器上，由车主负责保管。</li>
+  </ol>
+  <table>
+    <tr><th>数据</th><th>用途</th><th>什么时候删除</th></tr>
+    <tr><td>播放队列、最近播放的 50 首</td><td>排队、显示谁点的歌</td><td>删除这辆车时</td></tr>
+    <tr><td>朋友填的昵称（没填时随机分的动画角色名）</td><td>在队列里显示点歌人</td><td>12 小时没活动后让出；删除这辆车时</td></tr>
+    <tr><td>导入的歌单</td><td>没人点歌时随机放</td><td>清除导入或删除这辆车时</td></tr>
+    <tr><td>司机的 QQ 音乐登录凭证（只在司机扫码登录后才有）</td><td>用司机自己的账号获取能播放的歌曲</td><td>退出 QQ 音乐登录、删除这辆车，或 60 天没用时自动删除</td></tr>
+  </table>
+  <p>QQ 音乐登录凭证只用来以你的身份向 QQ 音乐请求歌曲，不会用于别的用途，不会给其他用户看到，也不会写进日志。登录是在你自己的 QQ 上确认的，你可以随时在 QQ「安全中心 → 授权管理」里取消授权。</p>
+
+  <h2>第三方服务</h2>
+  <ul>
+    <li><strong>QQ 音乐</strong>：搜歌、歌词、封面和播放链接来自 QQ 音乐，适用腾讯的隐私政策。本 App 和腾讯没有合作关系。</li>
+    <li><strong>Let's Encrypt</strong>：服务器用它的免费证书提供 https 加密连接。</li>
+  </ul>
+
+  <h2>删除你的数据</h2>
+  <ul>
+    <li>在 App 的「设置 → 我的车」里可以退出 QQ 音乐登录、删除这辆车。删除后，服务器上这辆车的所有数据（队列、昵称、导入的歌单、登录凭证）都会删掉。</li>
+    <li>自己搭的服务器：删掉服务器上的 <code>/opt/car-jukebox/data</code> 即可。</li>
+  </ul>
+
+  <h2>儿童</h2>
+  <p>本 App 不面向 13 岁以下儿童，也不会有意收集儿童的个人信息。</p>
+
+  <h2>联系</h2>
+  <p>对本政策有疑问，请联系：<a href="mailto:540393671@qq.com">540393671@qq.com</a></p>
+
+  <h2 id="en">Privacy Policy (English)</h2>
+  <p>Car Jukebox is a jukebox for car rides: the driver's iPhone plays music while passengers request songs from a web page. It has <strong>no ads, no tracking and no analytics</strong>.</p>
+  <p><strong>On your phone:</strong> the player link (server address and key) in the iOS Keychain, and playback preferences. If you save the QQ Music login QR code to Photos, the app asks for add-only photo access and never reads your library. None of this is sent to the developer.</p>
+  <p><strong>On the jukebox server:</strong> the app only talks to the server you configure — your own server, or a car created with an invite code on a friend's (the car owner's) server, who is responsible for that data. Per car the server keeps the queue and the last 50 played songs, nicknames typed by passengers, an imported fallback playlist, and — only after the driver logs in — the driver's QQ Music login token, used solely to request that driver's songs from QQ Music. The token is deleted when the driver logs out, deletes the car, or after 60 days of inactivity, and is never shown to other users or written to logs.</p>
+  <p><strong>Third parties:</strong> song search, lyrics, cover art and audio come from QQ Music (Tencent's privacy policy applies); there is no partnership with Tencent. HTTPS certificates are issued by Let's Encrypt.</p>
+  <p><strong>Deleting your data:</strong> Settings → 我的车 → log out of QQ Music or delete the car; deleting removes all of the car's data from the server.</p>
+  <p><strong>Children:</strong> not directed to children under 13.</p>
+  <p><strong>Contact:</strong> <a href="mailto:540393671@qq.com">540393671@qq.com</a></p>
+
+  <footer><p><a href="./">帮助</a></p></footer>
+</main>
+</body>
+</html>
