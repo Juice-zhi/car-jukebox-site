@@ -13,64 +13,236 @@
     <img src="icon.png" alt="">
     <div>
       <h1>隐私政策</h1>
-      <p>车载点歌台 · 更新于 2026 年 10 月</p>
+      <p>车载点歌台 · 更新于 2026 年 10 月 28 日</p>
     </div>
   </header>
-  <nav class="top"><a href="./">帮助</a><a href="#en">English</a></nav>
+  <nav class="top">
+    <a href="./">帮助</a>
+    <a href="#who">数据归谁管</a>
+    <a href="#server">服务器上存什么</a>
+    <a href="#delete">删除数据</a>
+    <a href="#en">English</a>
+  </nav>
 
-  <p>车载点歌台（下称「本 App」）是一个车上的点歌工具：司机的 iPhone 播放，朋友扫码在网页上点歌。本 App 由个人开发者开发，<strong>没有广告，不做追踪，不用任何统计或分析工具</strong>。</p>
+  <p>车载点歌台（下称「本 App」）是一个车上的点歌工具：司机的 iPhone 放歌，朋友扫码在网页上点歌。本 App 由个人开发者开发（下称「开发者」）。本 App、点歌台服务器程序和这个网站<strong>都没有广告，不做追踪，也不用任何统计、分析或崩溃上报工具</strong>。</p>
 
-  <h2>保存在你手机上的</h2>
+  <h2 id="who">你的数据存在哪台服务器上</h2>
+  <p>除了直接从 QQ 音乐的服务器放歌、加载封面（见<a href="#third">第三方</a>），本 App 只连你设置的那台点歌台服务器。数据存在哪台服务器上，就由谁保管。用邀请码开的车，在 App 的「设置 → 我的车」里能看到它建在哪个地址上。</p>
+  <table>
+    <tr><th>你的车</th><th>数据在哪</th><th>谁保管</th></tr>
+    <tr><td>用<strong>开发者</strong>发的邀请码开的车</td><td>开发者的服务器 <code>39.108.51.5</code>（阿里云，中国大陆）</td><td>开发者。下面「开发者服务器上存什么」说的就是这种车</td></tr>
+    <tr><td>用<strong>朋友</strong>发的邀请码开的车</td><td>那位朋友自己的服务器</td><td>那位朋友。服务器程序存的东西和下面一样，日志、备份怎么管由他决定。开发者收不到这些数据</td></tr>
+    <tr><td>你<strong>自己搭的</strong>服务器</td><td>你自己的云服务器</td><td>你自己。开发者收不到这些数据</td></tr>
+  </table>
+  <p class="muted">自己搭服务器时，安装和以后更新都要从开发者的服务器下载程序。这时开发者的服务器会看到你那台服务器的 IP 地址，只在内存里用来限制下载次数，不写日志。装好以后，你的服务器不会再联系开发者的服务器。安装时还要从别的网站下载运行环境 Node.js 和申请证书用的 certbot，那些网站也会看到你那台服务器的 IP 地址，见<a href="#third">第三方</a>。</p>
+
+  <h2 id="phone">存在你手机上的</h2>
   <ul>
-    <li>播放器链接（连接点歌台服务器用的网址和密钥），保存在 iOS 钥匙串里。</li>
-    <li>播放偏好：音质、是否在后台保持在线等。</li>
-    <li>把 QQ 音乐登录二维码存到相册时，会请求「仅添加照片」权限；本 App 不读取你的相册。</li>
+    <li><strong>播放器链接</strong>（服务器地址和这辆车的播放器密钥）存在 iOS 钥匙串里，旁边还有一个标记，记着这是不是用邀请码开在别人服务器上的车。它们不会同步到 iCloud 钥匙串。
+      <ul>
+        <li>删掉 App 以后它们还留在钥匙串里，重装会自动连回原来的车。</li>
+        <li>它们会跟着加密的 iPhone 备份走，包括 iCloud 云备份。从备份恢复到新手机，链接也在。</li>
+        <li>「设置 → 忘掉这辆车」和「删除这辆车」会把它们从钥匙串里删掉。</li>
+        <li>极少数情况下钥匙串写不进去，链接和标记会先存在 App 自己的设置里，下次打开再搬进钥匙串。</li>
+      </ul>
+    </li>
+    <li><strong>设置</strong>：音质、「队列空时保持后台在线」开关。用邀请码开车时还会存一个一次性的请求编号，车开成以后就删掉。</li>
+    <li>把 QQ 音乐登录二维码存到相册时，App 会请求「仅添加照片」权限，不读你的相册。存进去的二维码留在相册里，登录完可以删掉。</li>
   </ul>
-  <p>这些数据只在你的手机上，开发者看不到。</p>
+  <p>这些里面，只有三样会发给这辆车所在的服务器：播放器链接里的密钥，每个请求都带着，用来证明你是司机；音质设置，取播放链接时带上，服务器用完不存；开车时的请求编号，见下面的「邀请记录」。钥匙串里那个标记和「队列空时保持后台在线」开关不发出去。播放器密钥在服务器上怎么存：用邀请码开的车，服务器上只存它的哈希；服务器主人自己的那辆车（比如你自己搭的服务器上的车）不一样，密钥原样存在服务器上，每次启动还会打进日志（见<a href="#logs">服务器日志</a>）。</p>
+  <p>App 用着的时候，还会发给这辆车的服务器：在放哪首（服务器把正在放的那首存进这辆车的文件，放完移进播放历史，见下表）；放到哪、暂停没有（这两样服务器只放在内存里，给同车的人显示进度，不写进文件）；播放出错的信息（写进日志，见<a href="#logs">服务器日志</a>）；你在 App 里改的车名和车的规矩、导入歌单时贴的链接或歌名，以及调整队列、删歌。车开在开发者的服务器上时，这台服务器就是开发者的。</p>
 
-  <h2>保存在点歌台服务器上的</h2>
-  <p>本 App 只和你设置的点歌台服务器通信。服务器有两种：</p>
-  <ol>
-    <li><strong>你自己搭的服务器</strong>：数据都在你自己的服务器上，开发者接触不到。</li>
-    <li><strong>用邀请码在朋友（车主）的服务器上开的车</strong>：数据存在这位车主的服务器上，由车主负责保管。</li>
-  </ol>
+  <h2 id="web">朋友用的点歌网页</h2>
+  <ul>
+    <li>点歌网页不用 cookie。浏览器的本地存储里记着：点歌链接里的密钥、一个随机编号、填过的昵称，以及问没问过你昵称。每次打开点歌页、点歌、撤回，随机编号都会发给服务器：服务器靠它认出是同一部手机（分动画角色名、算点歌人编号），撤回自己点的歌时也要带上它。清除这个网站的浏览器数据，这些就删掉了。</li>
+    <li>司机在 Safari 里用的网页播放器也一样不用 cookie，本地存储里记着播放器链接里的密钥和「保持屏幕常亮」开关。</li>
+    <li>同一辆车里扫了码的人，都能看到队列、最近放过的 10 首，以及每首歌的点歌人昵称和点歌人编号。点歌人编号不是你的随机编号，是服务器用这辆车自己的随机密钥把它打乱以后的：只看得出哪几首是同一个人点的，推不回你的随机编号，换一辆车也对不上，别人拿它冒充不了你。</li>
+    <li>搜的词发给服务器，服务器再去 QQ 音乐搜，不带任何人的登录信息。搜索结果按搜的词存在服务器内存里，所有车共用，对应不到是谁搜的；搜的词不写进日志。缓存没有固定的保留时间：被后来的搜索挤掉（最多留几百条），或者服务器重启时清掉。</li>
+  </ul>
+
+  <h2 id="server">开发者服务器上存什么、存多久</h2>
+  <p>下表是用开发者的邀请码开的车在开发者服务器上存的东西。车本身<strong>不会自动删除</strong>，不删就一直留着。</p>
   <table>
     <tr><th>数据</th><th>用途</th><th>什么时候删除</th></tr>
-    <tr><td>播放队列、最近播放的 50 首</td><td>排队、显示谁点的歌</td><td>删除这辆车时</td></tr>
-    <tr><td>朋友填的昵称（没填时随机分的动画角色名）</td><td>在队列里显示点歌人</td><td>12 小时没活动后让出；删除这辆车时</td></tr>
-    <tr><td>导入的歌单</td><td>没人点歌时随机放</td><td>清除导入或删除这辆车时</td></tr>
-    <tr><td>司机的 QQ 音乐登录凭证（只在司机扫码登录后才有）</td><td>用司机自己的账号获取能播放的歌曲</td><td>退出 QQ 音乐登录、删除这辆车，或 60 天没用时自动删除</td></tr>
+    <tr><td>车名、车的规矩、建车时间、用的哪个邀请码；一个随机的设备编号</td><td>显示车名，按车的规矩办；设备编号在取播放链接时报给 QQ 音乐（一辆车一个，和手机无关）</td><td>删除这辆车时</td></tr>
+    <tr><td>点歌密钥（点歌二维码里的那个）；播放器密钥只存哈希</td><td>认出这辆车的司机和朋友</td><td>删除这辆车时。之后两把密钥的哈希和这辆车的编号再留 30 天，只用来让旧链接显示「这辆车已经被删掉了」、认出没删干净的文件，以及保证新开的车不会用上同样的编号和密钥</td></tr>
+    <tr><td>播放队列和正在放的那首。每首歌存歌名、歌手、点歌人的昵称和点歌网页的随机编号、点歌时间</td><td>排队，显示谁点的歌，让朋友撤回自己点的歌。发给同车的人时，随机编号换成打乱过的点歌人编号</td><td>放完的歌移进播放历史；删除这辆车时全部删除</td></tr>
+    <tr><td>这辆车自己的一个随机密钥</td><td>把点歌人的随机编号打乱成点歌人编号</td><td>删除这辆车时</td></tr>
+    <tr><td>播放历史：最近放过的 50 首，内容和队列一样，再加上播放时间</td><td>点歌页显示最近 10 首；没人点歌时不重复放刚放过的</td><td>超过 50 首时最早的被挤掉，没有时间上限；删除这辆车时全部删除</td></tr>
+    <tr><td>每个打开过点歌页的人随机分到的动画角色名（填没填昵称都分），和他点歌网页的随机编号、最近一次打开点歌页或点歌的时间存在一起</td><td>没填昵称时当作他的名字；同一部手机再扫码，名字不变</td><td>12 小时没动静以后，下次有人打开点歌页或点歌时让出来（一辆车最多记 200 个，多了先让出最久没来的）；删除这辆车时。<strong>朋友自己填的昵称</strong>跟着点的歌存在队列和播放历史里，不会在 12 小时后删除</td></tr>
+    <tr><td>导入的兜底歌单：歌单名、歌名、歌手，导入人的昵称和随机编号</td><td>没人点歌时随机放</td><td>清除导入、导入新的歌单，或者删除这辆车时</td></tr>
+    <tr><td>最近有人用这辆车的时间、司机最近用的时间、播放器链接第一次用上的时间</td><td>司机最近用的时间决定什么时候续期、什么时候自动删除 QQ 音乐登录凭证（以前版本的服务器存的车看最近有人用的时间，见下）；最近有人用的时间还让服务器的主人看出哪辆车很久没人用了；播放器链接第一次用上的时间用在 App 开车时没收到回复、重试的时候：用过的车不再重发播放器链接</td><td>删除这辆车时</td></tr>
+    <tr><td>司机的 QQ 音乐登录凭证（cookie，里面有 QQ 号和大约两个月有效的续期令牌）。司机扫码登录以后才有</td><td>用司机自己的账号向 QQ 音乐取播放链接、读歌单、续期登录</td><td>司机退出 QQ 音乐登录或删除这辆车时马上删除。服务器每小时检查一次：司机连续 60 天没用过这辆车，或者 QQ 授权已经过期，就自动删除</td></tr>
+    <tr><td>邀请记录：邀请码只存哈希和前 3 个字符，还有开发者写的备注、能用几次、到期时间、用它开了哪几辆车（车的随机编号）；App 开车时带的一次性请求编号和开出来的车</td><td>管理邀请码；开车的回复没收到、App 重试时认出是同一次</td><td>请求编号 24 小时后删除；整条在邀请码过期或作废 7 天以后删除</td></tr>
   </table>
-  <p>QQ 音乐登录凭证只用来以你的身份向 QQ 音乐请求歌曲，不会用于别的用途，不会给其他用户看到，也不会写进日志。登录是在你自己的 QQ 上确认的，你可以随时在 QQ「安全中心 → 授权管理」里取消授权。</p>
+  <p class="muted">「司机用过」只算带播放器链接的请求，来自 App 或网页播放器都算。朋友在点歌页一直在用，不算。例外是以前版本的服务器存的车：那时候只记了最近有人用这辆车的时间（朋友用也算），没单独记司机的，这样的车按这个时间算 60 天。一个时间都没记着的车（文件坏了、没了的）：服务器正在运行这辆车时，60 天从这次启动算起；没在运行它时（比如服务器的主人关掉了用邀请码开车），只等 QQ 授权过期。</p>
+  <p class="muted">这些文件万一读坏了（比如磁盘出错），有几种服务器会把坏的那份改个名留着查原因，30 天后自动删除：一辆车的队列和播放历史那份、导入的歌单（服务器运行这辆车、读它们的时候）；QQ 音乐登录凭证（服务器有没有在运行这辆车都一样）；邀请记录（服务器开着用邀请码开车的时候）。别的不改名：存车名和规矩的那份坏了，这辆车就开不起来，文件原样留着，不会自动删除；删掉的车的记录（密钥的哈希和车的编号）那份坏了，旧链接就显示不了「这辆车已经被删掉了」，服务器开着用邀请码开车时，下次再删一辆车会把这份整个重写（坏的内容就没了），没开时原样留着。</p>
 
-  <h2>第三方服务</h2>
+  <h2 id="qq">QQ 音乐登录凭证</h2>
   <ul>
-    <li><strong>QQ 音乐</strong>：搜歌、歌词、封面和播放链接来自 QQ 音乐，适用腾讯的隐私政策。本 App 和腾讯没有合作关系。</li>
-    <li><strong>Let's Encrypt</strong>：服务器用它的免费证书提供 https 加密连接。</li>
+    <li>只用来以你的身份向 QQ 音乐请求这辆车要用的东西：播放链接、兜底歌单、导入的 QQ 音乐歌单，以及定时续期登录。只有司机 7 天内用过的车才会定时续期。</li>
+    <li>不会出现在网页、推送和服务器日志里。别的车、点歌的朋友都看不到它。</li>
+    <li>服务器上不加密存放：加密用的钥匙也得放在同一台服务器上，挡不住服务器的管理员。开发者是这台服务器的管理员，技术上能读到它。App 在你开车之前也这样提示过。</li>
+    <li>同一个 QQ 号已经登在这台服务器的另一辆车上时，服务器会提醒你一句，但不说是哪辆车。两辆车续期时可能互相把登录顶掉。</li>
+    <li>从服务器上删掉凭证，不等于在腾讯那边取消了授权：这份授权在 QQ 那边要到期才失效。想马上作废，在手机 QQ 的「安全中心 → 授权管理」里取消 QQ 音乐的授权。</li>
   </ul>
 
-  <h2>删除你的数据</h2>
+  <h2 id="access">谁能接触到</h2>
   <ul>
-    <li>在 App 的「设置 → 我的车」里可以退出 QQ 音乐登录、删除这辆车。删除后，服务器上这辆车的所有数据（队列、昵称、导入的歌单、登录凭证）都会删掉。</li>
-    <li>自己搭的服务器：删掉服务器上的 <code>/opt/car-jukebox/data</code> 即可。</li>
+    <li><strong>别的车的人</strong>：不能。每辆车只认自己的密钥。</li>
+    <li><strong>同一辆车里的人</strong>：能看到车名、队列、最近放过的 10 首、点歌人的昵称和打乱过的点歌人编号；看不到别人的随机编号、司机的 QQ 号和登录凭证。</li>
+    <li><strong>开发者</strong>：作为服务器的管理员，能读服务器上的所有文件，包括上表里的全部数据和 QQ 音乐登录凭证。开发者只用这些数据让你的车能用。</li>
+    <li><strong>阿里云</strong>：数据存在它的云盘上。如果服务器开着云盘快照，删除之前的数据会留在快照里，直到快照过期。</li>
+  </ul>
+
+  <h2 id="logs">服务器日志</h2>
+  <ul>
+    <li>服务器不记访问日志：不记每个请求和访问的网址，也不记点歌的人从哪个 IP 来。</li>
+    <li>运行日志里会有这些：
+      <ul>
+        <li>车的编号和车名；</li>
+        <li>建车、删车、换链接、作废邀请这类管理记录，包括开发者写的邀请备注；</li>
+        <li>兜底歌单和导入的歌单的名字，导入人的昵称；</li>
+        <li>播放出错的信息：App 报上来的原文，服务器取播放链接失败的原因；</li>
+        <li>QQ 音乐扫码登录、续期成功没有和失败的原因，退出登录；</li>
+        <li>每小时的清理删了什么（到期的登录凭证、没删干净的车、30 天以前读坏了的文件），以及有哪个文件它看不了、删不掉。</li>
+      </ul>
+    </li>
+    <li>某个网络地址短时间里猜错密钥或邀请码太多次、被锁住时，日志会记下这个 IP 地址（IPv6 记前 64 位）。</li>
+    <li>用邀请码开的车，服务器不把 QQ 音乐登录凭证、密钥、QQ 号和 QQ 昵称写进日志。App 报上来的播放出错信息是原样记的，万一里面夹着 QQ 号或者凭证，服务器按常见的写法（cookie 和接口参数里的这些字段、o0 开头的 QQ 号）先抹掉；认不出的写法抹不掉。服务器主人自己的那辆车不一样：每次启动，日志里会打出它的播放器链接和点歌链接（带着密钥）；主人扫码登录 QQ 音乐时，会记下主人自己的 QQ 昵称。</li>
+    <li>日志存在服务器的系统日志（systemd journal）里，用系统默认的设置，没有单独设保留期限：占的空间到了上限，最早的先删。系统装着 rsyslog 的话（Ubuntu 一般装着），同样的行还会写进 <code>/var/log/syslog</code>，按系统的轮转设置定期删掉。删除一辆车，不会删掉已经写进日志的那些行。</li>
+    <li>为了挡住猜密钥、刷接口的人，服务器在内存里按 IP 地址计数。这些记录最多 12 小时就不再用，每小时清一次，不写进文件，服务重启就没了。</li>
+  </ul>
+
+  <h2 id="third">第三方</h2>
+  <ul>
+    <li><strong>QQ 音乐（腾讯）</strong>：搜歌、歌词、歌单、播放链接和扫码登录，都由服务器去问 QQ 音乐。另外，App <strong>直接</strong>从 QQ 音乐的服务器播放音频、加载封面，点歌网页也直接从 QQ 音乐的服务器加载封面，所以腾讯能看到你的手机或浏览器的 IP 地址。点歌网页不向腾讯发送来源网址，链接里的密钥不会被带过去。这些适用腾讯的隐私政策。本 App 和腾讯没有合作关系。</li>
+    <li><strong>其他音乐平台</strong>：导入歌单时如果粘贴了网易云音乐、酷狗、酷我、汽水音乐、Apple Music 或 Spotify 的分享链接，服务器会去那个平台读这个公开歌单的歌名和歌手，不带任何人的账号。</li>
+    <li><strong>阿里云</strong>：开发者的服务器托管在阿里云。</li>
+    <li><strong>Let's Encrypt</strong>：服务器用它的免费证书提供 https 加密连接。</li>
+    <li><strong>自己搭服务器时的下载站</strong>：安装程序从 npmmirror.com 下载 Node.js 运行环境，从阿里云的 mirrors.aliyun.com 下载申请证书用的 certbot，其他系统软件从服务器自己配好的软件源（apt）安装。这些网站会看到你那台服务器的 IP 地址。已经装好、版本够新的就不再下载。</li>
+    <li><strong>GitHub Pages</strong>：这个帮助网站和隐私政策放在 GitHub Pages 上，GitHub 会看到访问者的 IP 地址，适用 GitHub 的隐私声明。网站本身不用 cookie，不跑脚本，也不从别的网站加载字体或文件。</li>
+    <li><strong>Apple</strong>：如果你在 iPhone 的「设置 → 隐私与安全性 → 分析与改进」里选了与开发者共享，Apple 会把汇总的使用情况和崩溃报告提供给开发者。本 App 自己不收集这些。</li>
+  </ul>
+
+  <h2 id="delete">删除你的数据</h2>
+  <h3>用邀请码开的车</h3>
+  <ul>
+    <li><strong>删除这辆车</strong>：在「设置 → 我的车 → 删除这辆车」里输入车名确认。服务器会马上删掉这辆车的全部文件：车名、规矩、队列、播放历史、昵称、导入的歌单和 QQ 音乐登录凭证。App 同时忘掉这辆车的链接。
+      <p class="muted">删除以后还会剩下这些，各自到期后删除：</p>
+      <ul>
+        <li>两把密钥的哈希和这辆车的编号，30 天后删除；</li>
+        <li>邀请记录里这辆车的编号，那条邀请清理掉时删除；</li>
+        <li>已经写进服务器日志的行；</li>
+        <li>删除之前的云盘快照（如果有）。</li>
+      </ul>
+    </li>
+    <li><strong>退出 QQ 音乐登录</strong>（「设置 → 我的车」）：只删服务器上的登录凭证，车还在。</li>
+    <li><strong>忘掉这辆车</strong>（在设置里往下翻）：只删手机上的链接。服务器上的车和数据都还在。</li>
+    <li><strong>链接丢了，在 App 里删不了</strong>：发邮件给开发者，写上车名，请开发者删除。</li>
+  </ul>
+  <h3>点歌的朋友</h3>
+  <ul>
+    <li>还没放的歌，可以在点歌页撤回。</li>
+    <li>你的昵称会留在播放历史里，直到被新歌挤出最近 50 首，或者这辆车被删除。你导入过歌单的话，昵称也跟着导入的歌单存着，直到有人清除导入、导入新的歌单，或者这辆车被删除；导入成功时还会和歌单名一起写进日志。贴歌名列表导入的歌单就叫「你的昵称的歌单」，有人清除这个导入时，这个歌单名也会写进日志。想提前删掉，请司机删除这辆车，或者发邮件给开发者。</li>
+    <li>浏览器里记着的密钥、随机编号和昵称：清除这个网站的浏览器数据就行。</li>
+  </ul>
+  <h3>自己搭的服务器</h3>
+  <ul>
+    <li>你的 QQ 音乐登录在服务器的 <code>/opt/car-jukebox/config.json</code> 里，队列、播放历史和导入的歌单在 <code>/opt/car-jukebox/data/</code> 里。</li>
+    <li>按<a href="./#uninstall">帮助里的卸载步骤</a>删掉整个 <code>/opt/car-jukebox</code>。只删 <code>data/</code> 的话，QQ 音乐登录还留在 <code>config.json</code> 里。</li>
+    <li>最彻底的办法是直接释放这台云服务器，系统日志也一起没了。以前手动建过云盘快照的话，在云控制台里另外删掉。</li>
   </ul>
 
   <h2>儿童</h2>
   <p>本 App 不面向 13 岁以下儿童，也不会有意收集儿童的个人信息。</p>
 
+  <h2>政策变更</h2>
+  <p>这份政策有变化时，会更新这一页，并改上面的日期。</p>
+
   <h2>联系</h2>
-  <p>对本政策有疑问，请联系：<a href="mailto:540393671@qq.com">540393671@qq.com</a></p>
+  <p>对本政策有疑问，或者想删除数据，请联系：<a href="mailto:540393671@qq.com">540393671@qq.com</a></p>
 
+  <section lang="en">
   <h2 id="en">Privacy Policy (English)</h2>
-  <p>Car Jukebox is a jukebox for car rides: the driver's iPhone plays music while passengers request songs from a web page. It has <strong>no ads, no tracking and no analytics</strong>.</p>
-  <p><strong>On your phone:</strong> the player link (server address and key) in the iOS Keychain, and playback preferences. If you save the QQ Music login QR code to Photos, the app asks for add-only photo access and never reads your library. None of this is sent to the developer.</p>
-  <p><strong>On the jukebox server:</strong> the app only talks to the server you configure — your own server, or a car created with an invite code on a friend's (the car owner's) server, who is responsible for that data. Per car the server keeps the queue and the last 50 played songs, nicknames typed by passengers, an imported fallback playlist, and — only after the driver logs in — the driver's QQ Music login token, used solely to request that driver's songs from QQ Music. The token is deleted when the driver logs out, deletes the car, or after 60 days of inactivity, and is never shown to other users or written to logs.</p>
-  <p><strong>Third parties:</strong> song search, lyrics, cover art and audio come from QQ Music (Tencent's privacy policy applies); there is no partnership with Tencent. HTTPS certificates are issued by Let's Encrypt.</p>
-  <p><strong>Deleting your data:</strong> Settings → 我的车 → log out of QQ Music or delete the car; deleting removes all of the car's data from the server.</p>
-  <p><strong>Children:</strong> not directed to children under 13.</p>
-  <p><strong>Contact:</strong> <a href="mailto:540393671@qq.com">540393671@qq.com</a></p>
+  <p>Car Jukebox (点歌台) is a jukebox for car rides: the driver's iPhone plays music while passengers request songs from a web page. It is made by an individual developer. The app, the jukebox server software and this website have <strong>no ads, no tracking, and no analytics or crash-reporting tools</strong>.</p>
 
-  <footer><p><a href="./">帮助</a></p></footer>
+  <p><strong>Who holds your data.</strong> Apart from loading audio and cover art directly from QQ Music (see Third parties), the app only talks to the jukebox server you set up. Whoever runs that server holds the data. Settings → 我的车 shows the server a car was created on.</p>
+  <ul>
+    <li><strong>A car created with the developer's invite</strong> is on the developer's server, 39.108.51.5 (Alibaba Cloud, mainland China). The developer holds that data, as described below.</li>
+    <li><strong>A car created with a friend's invite</strong> is on that friend's server, and the friend holds the data.</li>
+    <li><strong>On your own server</strong>, you hold the data.</li>
+  </ul>
+  <p>In the last two cases nothing reaches the developer. Installing or updating your own server downloads the software from the developer's server. That server sees your server's IP address, keeps it in memory only for rate limiting, and does not log it. The installer also downloads Node.js and certbot from other sites, which see that IP address too (see Third parties).</p>
+
+  <p><strong>On your phone.</strong></p>
+  <ul>
+    <li>The player link (server address and the car's player key) is stored in the iOS Keychain, with a flag saying whether the car was created with an invite on someone else's server, without iCloud Keychain sync. Both survive deleting the app, so a reinstall reconnects. They are included in encrypted backups, including iCloud Backup. 忘掉这辆车 (Forget this car) and 删除这辆车 (Delete this car) remove them.</li>
+    <li>The app also stores playback quality, the keep-alive switch, and a one-time request ID while you create a car.</li>
+    <li>Saving the QQ login QR code uses add-only Photos access. The app never reads your library.</li>
+  </ul>
+  <p>Of these, only three things go to the car's server: the player key with every request, the quality setting with each play-link request (not stored), and the one-time request ID (see invite records below). The Keychain flag and the keep-alive switch stay on the phone. For a car created with an invite, the server stores just a hash of the player key; for the server owner's own car (such as yours on a server you set up), it keeps the key itself and prints it in the log at every start. While in use, the app also sends the car's server what is playing (saved as the car's current song, then in its play history), how far along it is and whether it is paused (these two are kept in memory only), playback errors (logged), and any car name, rules, playlist imports and queue changes you make. For cars created with the developer's invite, that server is the developer's.</p>
+
+  <p><strong>Passenger web page.</strong></p>
+  <ul>
+    <li>The page uses no cookies. Browser local storage keeps the join key, a random ID, your nickname, and whether you were asked for one. The random ID goes to the server each time you open the page, add a song or withdraw one: it lets the server recognize the same phone (for the cartoon name and the requester ID) and is needed to withdraw your own songs. The Safari web player for drivers likewise keeps only the player key and its keep-screen-on switch.</li>
+    <li>Everyone in the same car sees the queue, the last 10 songs, requesters' nicknames and requester IDs. A requester ID is derived from the random ID with the car's own secret key: it shows which songs came from the same person, but cannot be turned back into the random ID or matched across cars, so nobody can act as you with it.</li>
+    <li>Search terms go through the server to QQ Music without anyone's login and are not logged. Results are kept in server memory by search term, shared by all cars and not linked to anyone, with no fixed retention: newer searches push them out (a few hundred at most), and a restart clears them.</li>
+  </ul>
+
+  <p><strong>Stored on the developer's server, per car.</strong> Cars are never deleted automatically.</p>
+  <ul>
+    <li>The car name, rules, creation time and invite used, plus a random device number sent to QQ Music with play-link requests (one per car, unrelated to your phone), and a random key that derives requester IDs.</li>
+    <li>The join key and a hash of the player key.</li>
+    <li>The queue, the song now playing and the last 50 played songs, each with the requester's nickname, random ID and times. There is no time limit; older songs are pushed out by newer ones.</li>
+    <li>A cartoon name auto-assigned to everyone who opens the passenger page (used as their name if they set none), stored with their random ID and last-visit time, and released after 12 hours of inactivity (at most 200 per car; the longest-idle go first). Nicknames that passengers type stay in the queue and history, and in an imported playlist if they imported one.</li>
+    <li>An imported fallback playlist, with the importer's nickname.</li>
+    <li>Three timestamps: the last use by anyone, the last use by the driver, and the first use of the player link. The driver's last use decides when the login is renewed and the credential deleted (older cars use the last use by anyone, see below); the last use by anyone also shows the server owner which cars sit unused; the first use of the player link stops a retried car creation from issuing the link again once it has been used.</li>
+    <li>Only after the driver logs in: the driver's QQ Music login credential, which contains the QQ number and a refresh token valid for about two months. It is used only to fetch this car's play links and playlists and to renew the login. It is never shown to other users or written to logs. It is stored unencrypted, so the developer, as server administrator, can technically read it. It is deleted at once when the driver logs out or deletes the car. An hourly check also deletes it once the driver has not used the car for 60 days (only requests made with the player link count) or the QQ authorization has expired. Cars saved by older server versions recorded only the last time anyone used the car (passengers included), and that time is used instead. If no time is recorded at all (a damaged or missing file), the 60 days count from the server's start while it runs the car; when it does not run the car (for example, invites were switched off), only the expiry applies.</li>
+  </ul>
+  <p>Invite records keep a hash and the first 3 characters of the code, the developer's note, use count, expiry, the IDs of the cars it created, and for 24 hours the app's one-time request ID. A record is removed 7 days after the invite expires or is revoked. Some damaged data files are renamed and kept for 30 days, then deleted: a car's queue and history file and its imported playlist (when the server loads the car), its QQ login credential (whether or not the server runs the car), and the invite records (while invites are on). Others are not renamed: a damaged file with the car's name and rules stops that car from loading and is left as it is; a damaged record of deleted cars stops old links from saying the car was deleted, and while invites are on, the next car deletion rewrites it in full (the damaged content is lost); otherwise it is left as it is. Deleting the credential from the server does not revoke it at Tencent. To revoke it, use QQ → 安全中心 → 授权管理.</p>
+
+  <p><strong>Who can access it.</strong> People in other cars cannot. People in the same car see the car name, queue, nicknames and requester IDs, never each other's random IDs. The developer, as server administrator, can read every file. Data sits on Alibaba Cloud disks; if disk snapshots are enabled, deleted data remains in them until they expire.</p>
+
+  <p><strong>Server logs.</strong> There is no access log. The run log contains:</p>
+  <ul>
+    <li>car IDs and names;</li>
+    <li>admin events, including the developer's invite notes;</li>
+    <li>fallback and imported playlist names, and importers' nicknames;</li>
+    <li>playback errors: messages sent by the app, and why the server could not get a play link;</li>
+    <li>QQ login, renewal and logout results;</li>
+    <li>what the hourly cleanup deleted (expired credentials, leftover folders, damaged files older than 30 days), and any file it could not read or delete;</li>
+    <li>the IP address (an IPv6 /64) of any address locked out for too many wrong keys or invite codes.</li>
+  </ul>
+  <p>For cars created with an invite, the server does not write credentials, keys, QQ numbers or QQ nicknames to the log. App-reported playback errors are logged as sent; if one happens to contain a QQ number or credential, common forms (cookie and API fields, o0-prefixed QQ numbers) are masked first, but unrecognized forms are not. The server owner's own car differs: its player and join links, keys included, are printed at every start, and the owner's own QQ nickname is logged on QR login. Logs live in the systemd journal with the system's default settings and no set retention period; the oldest entries are dropped when it reaches its size limit. If rsyslog is installed (usual on Ubuntu), the same lines also go to <code>/var/log/syslog</code>, which the system rotates. Per-IP rate-limit counters stay in memory only, stop counting after at most 12 hours and are cleared hourly.</p>
+
+  <p><strong>Third parties.</strong></p>
+  <ul>
+    <li>QQ Music (Tencent): search, lyrics, playlists, play links and QR login go through the server. The app streams audio and loads cover art directly from QQ Music's servers, and the passenger page loads covers from them too, so Tencent sees your device's IP address. No referrer is sent. Tencent's privacy policy applies. The app is not affiliated with Tencent.</li>
+    <li>Other music platforms: importing a NetEase Cloud Music, Kugou, Kuwo, Soda Music, Apple Music or Spotify link makes the server read that public playlist's titles and artists.</li>
+    <li>Alibaba Cloud hosts the developer's server.</li>
+    <li>Let's Encrypt issues the HTTPS certificates.</li>
+    <li>When you install your own server, the installer downloads Node.js from npmmirror.com and certbot from mirrors.aliyun.com (Alibaba Cloud), and other system packages from the server's own apt sources; these sites see your server's IP address. Nothing is downloaded again once a recent enough version is installed.</li>
+    <li>This site is hosted on GitHub Pages, which sees visitors' IP addresses. The site itself uses no cookies, scripts or external fonts.</li>
+    <li>Apple may share aggregated usage and crash reports with the developer if you opted in on your iPhone.</li>
+  </ul>
+
+  <p><strong>Deleting your data.</strong></p>
+  <ul>
+    <li>Settings → 我的车 → 删除这辆车 (Delete this car), then type the car name. This deletes all of the car's files at once, including the QQ credential, and the app forgets the link.</li>
+    <li>Some traces remain until they age out: the key hashes and the car ID for 30 days (so old links can say the car was deleted and new cars never reuse them), the car ID in invite records until those are cleared, lines already written to the logs, and any earlier disk snapshots.</li>
+    <li>退出 QQ 音乐登录 (Log out of QQ Music) deletes only the credential. 忘掉这辆车 (Forget this car) only removes the link from your phone.</li>
+    <li>A passenger's nickname stays in the play history until it is pushed out of the last 50 songs or the car is deleted. A passenger who imported a playlist is also named in it until the playlist is cleared or replaced or the car is deleted, and in that import's log line. A pasted song list is named after the importer, so clearing it logs their nickname too.</li>
+    <li>If you lost the link, or you are a passenger who wants your nickname removed, email the developer.</li>
+    <li>On a self-hosted server, the QQ login is in <code>/opt/car-jukebox/config.json</code> and everything else is in <code>/opt/car-jukebox/data/</code>. Remove the whole <code>/opt/car-jukebox</code>, or release the server (delete any disk snapshots separately).</li>
+  </ul>
+
+  <p><strong>Children.</strong> The app is not directed to children under 13.</p>
+  <p><strong>Changes.</strong> If this policy changes, this page and the date at the top will be updated.</p>
+  <p><strong>Contact.</strong> <a href="mailto:540393671@qq.com">540393671@qq.com</a></p>
+  </section>
+
+  <footer><p><a href="./">帮助</a> · 联系：<a href="mailto:540393671@qq.com">540393671@qq.com</a></p></footer>
 </main>
 </body>
 </html>
